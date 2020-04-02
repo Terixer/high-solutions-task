@@ -2,10 +2,13 @@
 
 namespace App\Console\Commands\Swapi;
 
+use App\Services\SwapiService;
+use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 
 class FetchPeople extends Command
 {
+    const SWAPI_PEOPLE_URL = '/people/';
     /**
      * The name and signature of the console command.
      *
@@ -30,16 +33,19 @@ class FetchPeople extends Command
         parent::__construct();
     }
 
+
     /**
      * Execute the console command.
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(SwapiService $swapiService)
     {
         $amount = $this->argument('amount');
 
         $this->info("Featching $amount people from SWAPI...");
+
+        dd($swapiService->getResults(self::SWAPI_PEOPLE_URL, $amount));
 
         $bar = $this->output->createProgressBar($amount);
 
