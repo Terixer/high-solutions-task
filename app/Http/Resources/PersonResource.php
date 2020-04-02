@@ -23,7 +23,7 @@ class PersonResource extends JsonResource
             'skin_color' => $this->skin_color === 'unknown' ? null : $this->skin_color,
             'eye_color' => $this->eye_color === 'unknown' ? null : $this->eye_color,
             'birth_year' => $this->birth_year === 'unknown' ? null : $this->birth_year,
-            'gender' => $this->gender === 'unknown' ? null : $this->gender,
+            'gender' => $this->gender === 'n/a' ? null : $this->gender,
             'url' => route('people.show', [
                 'person' => $this->name
             ])
