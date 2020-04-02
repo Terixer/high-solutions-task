@@ -2,50 +2,79 @@
 
 namespace App\Services;
 
+use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
+use stdClass;
+use Illuminate\Support\Facades\Http;
 
 class SwapiResponse
 {
 
     /**
-     * @var string
-     */
-    private $nextPage;
-
-    /**
-     * @var string
-     */
-    private $previousPage;
-
-    /**
      * @var Collection
      */
-    private $results;
+    private $items;
 
     /**
      * @var array
      */
     private $response;
 
-    public function __construct($content)
+    /**
+     * @param string $apiUrl
+     * @param integer $itemsToFetchCount
+     *
+     * @return void
+     */
+    public function __construct(string $apiUrl)
     {
-        $this->response = json_decode($content);
-        $this->nextPage = $this->response->next;
-        $this->previousPage = $this->response->previous;
-        $this->results = collect($this->response->results);
+        $this->response = $this->getNewResponse($apiUrl);
+        $this->items = $this->getResult();
     }
 
-    public function getResults($leftAmount)
+    /**
+     * @return Collection
+     */
+    public function getItemsCollection(int $itemsToFetchCount)
     {
-        $amount = $leftAmount - $this->results->count();
-        if ($amount > 0) {
-            return $this->results;
+        $remainingItemsToFetch = $itemsToFetchCount - $this->getItemsCount();
+
+        if ($remainingItemsToFetch > 0) {
+            return $this->items;
         }
-        return $this->results->take($leftAmount);
+        return $this->items->take($itemsToFetchCount);
     }
 
+
+    /**
+     * @return int
+     */
+    public function getItemsCount()
+    {
+        return $this->items->count();
+    }
+
+    /**
+     * @return string
+     */
     public function getNextPage()
     {
-        return $this->nextPage;
+        return $this->response['next'];
+    }
+
+    /**
+     * @return array
+     */
+    private function getNewResponse($apiUrl)
+    {
+        return Http::get($apiUrl)->json();
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getResult()
+    {
+        return collect($this->response['results']);
     }
 }

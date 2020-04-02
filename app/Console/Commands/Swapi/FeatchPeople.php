@@ -8,20 +8,20 @@ use Illuminate\Console\Command;
 
 class FetchPeople extends Command
 {
-    const SWAPI_PEOPLE_URL = '/people/';
+    const SWAPI_PEOPLE_URL = 'https://swapi.co/api/people/';
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'swapi:fetch:people {amount}';
+    protected $signature = 'swapi:fetch:people {count}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Fetch {amount} people from SWAPI';
+    protected $description = 'Fetch {count} people from SWAPI';
 
     /**
      * Create a new command instance.
@@ -41,17 +41,17 @@ class FetchPeople extends Command
      */
     public function handle(SwapiService $swapiService)
     {
-        $amount = $this->argument('amount');
+        $count = $this->argument('count');
 
-        $this->info("Featching $amount people from SWAPI...");
+        $this->info("Fetching $count people from SWAPI...");
 
-        dd($swapiService->getResults(self::SWAPI_PEOPLE_URL, $amount));
-
-        $bar = $this->output->createProgressBar($amount);
+        $bar = $this->output->createProgressBar(2);
 
         $bar->start();
 
+        $peopleCollection = $swapiService->getItems(self::SWAPI_PEOPLE_URL, $count);
         $bar->advance();
+
 
         $bar->finish();
     }

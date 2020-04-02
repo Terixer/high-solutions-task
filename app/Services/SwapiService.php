@@ -2,47 +2,18 @@
 
 namespace App\Services;
 
-use GuzzleHttp\Client;
-use Illuminate\Support\Collection;
+use Closure;
 
 class SwapiService
 {
-    const SWAPI_API_URL = 'https://swapi.co/api';
 
-    private $client;
-
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-    }
-
-    // public function getResults($url, $amount)
-    // {
-    //     $elementsLeft = (int) $amount;
-    //     $apiUrl = self::SWAPI_API_URL . $url;
-    //     $collection = collect();
-
-    //     while ($elementsLeft > 0) {
-    //         $response = $this->getSwapiResponse($apiUrl);
-    //         $results = $response->getResults($elementsLeft);
-    //         $elementsLeft -= $results->count();
-    //         $collection = $collection->merge($results);
-    //         $apiUrl = $response->getNextPage();
-    //         if ($apiUrl === null) {
-    //             break;
-    //         }
-    //     }
-
-    //     return $collection;
-    // }
-
-
-
-    public function getResults($url, $amount)
+    public function getItems(string $apiUrl, int $itemsToFetchCount)
     {
         $collection = collect();
 
-        foreach ($this->getResultGenerator($url, $amount) as $result) {
+        $collectionGenerator = $this->getItemsCollectionGenerator($apiUrl, $itemsToFetchCount);
+
+        foreach ($collectionGenerator as $result) {
             $collection = $collection->merge($result);
         }
 
@@ -50,41 +21,16 @@ class SwapiService
     }
 
 
-    private function getResultGenerator($url, $amount)
+    private function getItemsCollectionGenerator(string $apiUrl, int $itemsToFetchCount)
     {
-        $elementsLeft = (int) $amount;
-        $apiUrl = self::SWAPI_API_URL . $url;
 
-        while ($elementsLeft > 0 && $apiUrl !== null) {
+        while ($itemsToFetchCount > 0 && $apiUrl !== null) {
 
-            $response = $this->getSwapiResponse($apiUrl);
-            $results = $response->getResults($elementsLeft);
-            $elementsLeft -= $results->count();
+            $response = new SwapiResponse($apiUrl);
+            yield $response->getItemsCollection($itemsToFetchCount);
+
             $apiUrl = $response->getNextPage();
-
-            yield $results;
+            $itemsToFetchCount -= $response->getItemsCount();
         }
-    }
-
-    private function getSwapiResponse($apiUrl)
-    {
-        $response = $this->prepareGetResponse($apiUrl);
-        $body = $this->getBody($response);
-        return $this->prepareResponse($body);
-    }
-
-    private function getBody($response)
-    {
-        return $response->getBody();
-    }
-
-    private function prepareGetResponse($url)
-    {
-        return $this->client->get($url);
-    }
-
-    private function prepareResponse($content)
-    {
-        return new SwapiResponse($content);
     }
 }
