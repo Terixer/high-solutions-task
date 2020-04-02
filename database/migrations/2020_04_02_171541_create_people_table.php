@@ -16,13 +16,13 @@ class CreatePeopleTable extends Migration
         Schema::create('people', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->smallInteger('height')->unsigned();
-            $table->smallInteger('mass')->unsigned();
+            $table->string('height');
+            $table->string('mass');
             $table->string('hair_color');
             $table->string('skin_color');
             $table->string('eye_color');
             $table->string('birth_year');
-            $table->string('male');
+            $table->string('gender');
         });
     }
 
