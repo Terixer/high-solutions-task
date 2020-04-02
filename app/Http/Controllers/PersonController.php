@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PersonResource;
 use App\Person;
 
 class PersonController extends Controller
@@ -13,7 +14,7 @@ class PersonController extends Controller
      */
     public function index()
     {
-        //
+        return PersonResource::collection(Person::all());
     }
 
     /**
@@ -24,6 +25,6 @@ class PersonController extends Controller
      */
     public function show(Person $person)
     {
-        //
+        return new PersonResource($person);
     }
 }
