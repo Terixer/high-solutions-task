@@ -4,8 +4,8 @@ namespace App\Console\Commands\Swapi;
 
 use App\Person;
 use App\Services\SwapiService;
-use GuzzleHttp\Client;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 class FetchPeople extends Command
 {
@@ -25,6 +25,20 @@ class FetchPeople extends Command
     protected $description = 'Fetch {count} people from SWAPI';
 
     /**
+     * @var int
+     */
+    private $peopleCollectionCount;
+
+    /**
+     * @var SwapiService
+     */
+    private $swapiService;
+
+    /**
+     * @var Collection
+     */
+    private $peopleCollection;
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -34,7 +48,6 @@ class FetchPeople extends Command
         parent::__construct();
     }
 
-
     /**
      * Execute the console command.
      *
@@ -42,34 +55,60 @@ class FetchPeople extends Command
      */
     public function handle(SwapiService $swapiService)
     {
-        $count = $this->argument('count');
+        $this->swapiService = $swapiService;
+
+        $count = $this->getArgument('count');
 
         $this->info("START SWAPI!");
 
+        $this->clearPeopleTable();
 
+        $this->fetchElements($count);
+
+        $this->clearCollection();
+
+        $this->insertCollectionToDatabase();
+
+        $this->info("Fetch and add to database $this->peopleCollectionCount!");
+    }
+
+    private function getArgument($key)
+    {
+        return $this->argument($key);
+    }
+
+    private function clearPeopleTable()
+    {
         Person::truncate();
+
         $this->info("Truncate People models");
+    }
 
+    private function fetchElements($count)
+    {
+        $this->peopleCollection = $this->swapiService->getItems(self::SWAPI_PEOPLE_URL, $count);
 
-        $peopleCollection = $swapiService->getItems(self::SWAPI_PEOPLE_URL, $count);
-        $peopleCount = $peopleCollection->count();
-        if ($peopleCollection->count() < $count) {
-            $this->warn("Fetch only $peopleCount / $count, because there are no more.");
+        $this->peopleCollectionCount = $this->peopleCollection->count();
+        if ($this->peopleCollectionCount < $count) {
+            $this->warn("Fetch only $this->peopleCollectionCount / $count, because there are no more.");
         }
-        $this->info("Fetch $peopleCount people!");
 
+        $this->info("Fetch $this->peopleCollectionCount people!");
+    }
 
-
-        $peopleCollection = $peopleCollection->transform(function ($collection) {
+    private function clearCollection()
+    {
+        $this->peopleCollection = $this->peopleCollection->transform(function ($collection) {
             return collect($collection)->only(Person::ATTRIBUTES_TO_FETCH);
         });
+
         $this->info("Remove unnecessary attributes from collection.");
+    }
 
+    private function insertCollectionToDatabase()
+    {
+        Person::insert($this->peopleCollection->toArray());
 
-        Person::insert($peopleCollection->toArray());
-        $this->info("Insert $peopleCount people to database.");
-
-
-        $this->info("Fetch and add to database $peopleCount!");
+        $this->info("Insert $this->peopleCollectionCount people to database.");
     }
 }
