@@ -47,7 +47,8 @@ class FetchPeopleCommand extends Command
         $this->info("Truncate People models");
         Person::truncate();
 
-        $this->info("Fetching $peopleCount people!");
+        $this->info("Fetching $count people....");
+
         $peopleCollection = $swapiService->getItems(self::SWAPI_PEOPLE_URL, $count);
         $peopleCount = $peopleCollection->count();
         if ($peopleCollection->count() < $count) {
