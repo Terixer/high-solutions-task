@@ -44,28 +44,24 @@ class FetchPeopleCommand extends Command
 
         $this->info("START SWAPI!");
 
-
-        Person::truncate();
         $this->info("Truncate People models");
+        Person::truncate();
 
-
+        $this->info("Fetching $peopleCount people!");
         $peopleCollection = $swapiService->getItems(self::SWAPI_PEOPLE_URL, $count);
         $peopleCount = $peopleCollection->count();
         if ($peopleCollection->count() < $count) {
             $this->warn("Fetch only $peopleCount / $count, because there are no more.");
         }
-        $this->info("Fetch $peopleCount people!");
 
 
-
+        $this->info("Remove unnecessary attributes from collection.");
         $peopleCollection = $peopleCollection->transform(function ($collection) {
             return collect($collection)->only(Person::ATTRIBUTES_TO_FETCH);
         });
-        $this->info("Remove unnecessary attributes from collection.");
 
-
-        Person::insert($peopleCollection->toArray());
         $this->info("Insert $peopleCount people to database.");
+        Person::insert($peopleCollection->toArray());
 
 
         $this->info("Fetch and add to database $peopleCount!");
