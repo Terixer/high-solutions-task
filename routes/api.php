@@ -14,7 +14,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => 'people', 'as' => 'people.'], function () {
-    Route::get('', 'PersonController@index')->name('index');
-    Route::get('/{person}', 'PersonController@show')->name('show');
-});
+Route::post('login', 'PassportController@login')->name('login');
+Route::post('register', 'PassportController@register')->name('register');
+
+
+Route::group(
+    [
+        'prefix' => 'people',
+        'as' => 'people.',
+        'middleware' => 'auth:api'
+    ],
+    function () {
+        Route::get('', 'PersonController@index')->name('index');
+        Route::get('/{person}', 'PersonController@show')->name('show');
+    }
+);
