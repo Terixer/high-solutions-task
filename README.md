@@ -10,7 +10,7 @@ cp ./.env.example ./.env
 ```
 Uzupełnienie informacji odnośnie bazy danych.
 ```
-composer dev-install
+composer prod-install
 ```
 
 ### Serwer
