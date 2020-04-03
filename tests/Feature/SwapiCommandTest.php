@@ -19,7 +19,7 @@ class SwapiCommandTest extends TestCase
         $count = 14;
         $this->artisan('swapi:fetch:people ' . $count)
             ->expectsOutput('Truncate People models')
-            ->expectsOutput("Fetch $count people!")
+            ->expectsOutput("Fetching $count people....")
             ->expectsOutput('Remove unnecessary attributes from collection.')
             ->expectsOutput("Insert $count people to database.")
             ->expectsOutput("Fetch and add to database $count!")
@@ -36,8 +36,8 @@ class SwapiCommandTest extends TestCase
 
         $this->artisan('swapi:fetch:people ' . $count)
             ->expectsOutput('Truncate People models')
+            ->expectsOutput("Fetching $count people....")
             ->expectsOutput("Fetch only $peopleInSwapi / $count, because there are no more.")
-            ->expectsOutput("Fetch $peopleInSwapi people!")
             ->expectsOutput('Remove unnecessary attributes from collection.')
             ->expectsOutput("Insert $peopleInSwapi people to database.")
             ->expectsOutput("Fetch and add to database $peopleInSwapi!")
