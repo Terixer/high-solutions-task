@@ -22,6 +22,10 @@
             margin: 0;
         }
 
+        .mb {
+            margin-bottom: 80px;
+        }
+
         .full-height {
             height: 100vh;
         }
@@ -96,41 +100,42 @@
 
 <body>
     <div class="full-height">
-
         <div class="content">
             <div class="title m-b-md">
-                Laravel
+                High Solutions
             </div>
-            <div class="links">
+            <div>
                 <h1>Register user</h1>
                 <code>{{route('register')}} <b>(POST)</b></code>
-                <pre>
-                    <p>Example data:</p>
-                    <code>{</code>
-                    <code>  email : user@user.com</code>
-                    <code>  password : password123</code>
-                    <code>  password_confirmation : password123</code>
-                    <code>}</code>
-                </pre>
-                <h1>Login user</h1>
-                <code>{{route('login')}} <b>(POST)</b></code>
-                <pre>
-                    <p>Example data:</p>
-                    <code>{</code>
-                    <code>  email : user@user.com</code>
-                    <code>  password : password123</code>
-                    <code>}</code>
-                </pre>
-                <h1>Get all people <small>(oauth)</small></h1>
-                <code>{{route('people.index')}} <b>(GET)</b></code>
-                <h1>Get person by name <small>(oauth)</small></h1>
-                <code>{{route('people.index')}} <b>(GET)</b></code>
-                <pre>
-                    <p>Example data:</p>
-                    <code>{</code>
-                    <code>  name : Yoda</code>
-                    <code>}</code>
-                </pre>
+                <div>
+                    <pre>
+                        <p>Example data:</p>
+                        <code>{</code>
+                        <code>  email : user@user.com</code>
+                        <code>  password : password123</code>
+                        <code>  password_confirmation : password123</code>
+                        <code>}</code>
+                    </pre>
+                </div>
+                <div>
+                    <h1>Login user</h1>
+                    <code>{{route('login')}} <b>(POST)</b></code>
+                    <pre>
+                        <p>Example data:</p>
+                        <code>{</code>
+                        <code>  email : user@user.com</code>
+                        <code>  password : password123</code>
+                        <code>}</code>
+                    </pre>
+                </div>
+                <div class="mb">
+                    <h1>Get all people <small>(OAuth2)</small></h1>
+                    <code>{{route('people.index')}} <b>(GET)</b></code>
+                </div>
+                <div class="mb">
+                    <h1>Get person by name <small>(OAuth2)</small></h1>
+                    <code>{{route('people.show',['person' => 'Yoda'])}} <b>(GET)</b></code>
+                </div>
             </div>
         </div>
     </div>
