@@ -10,9 +10,12 @@ cp ./.env.example ./.env
 ```
 Uzupełnienie informacji odnośnie bazy danych.
 ```
-php artisan migrate::fresh
-php artisan swapi:fetch:people 100
-php artisan passport:install
+composer dev-install
+```
+
+### Serwer
+
+```
 php artisan serve
 ```
 
