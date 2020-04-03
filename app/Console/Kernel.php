@@ -2,9 +2,9 @@
 
 namespace App\Console;
 
-use App\Console\Commands\Swapi\FetchPeople;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Console\Commands\Swapi\FetchPeopleCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        FetchPeople::class
+        FetchPeopleCommand::class
     ];
 
     /**

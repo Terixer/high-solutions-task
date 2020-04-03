@@ -17,5 +17,14 @@ use Faker\Generator as Faker;
 */
 
 $factory->define(Person::class, function (Faker $faker) {
-    return [];
+    return [
+        'name' => $faker->firstNameMale,
+        'height' => $faker->numberBetween(100, 200),
+        'mass' => $faker->numberBetween(50, 300),
+        'hair_color' => $faker->word,
+        'skin_color' => $faker->word,
+        'eye_color' => $faker->word,
+        'birth_year' => $faker->word,
+        'gender' => $faker->word,
+    ];
 });

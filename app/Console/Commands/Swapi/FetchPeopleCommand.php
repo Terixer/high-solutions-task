@@ -4,10 +4,9 @@ namespace App\Console\Commands\Swapi;
 
 use App\Person;
 use App\Services\SwapiService;
-use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 
-class FetchPeople extends Command
+class FetchPeopleCommand extends Command
 {
     const SWAPI_PEOPLE_URL = 'https://swapi.co/api/people/';
     /**
@@ -33,7 +32,6 @@ class FetchPeople extends Command
     {
         parent::__construct();
     }
-
 
     /**
      * Execute the console command.
