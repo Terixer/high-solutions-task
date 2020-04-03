@@ -10,6 +10,7 @@ cp ./.env.example ./.env
 ```
 Uzupełnienie informacji odnośnie bazy danych.
 ```
+php artisan key:generate
 composer prod-install
 ```
 
