@@ -63,7 +63,6 @@
         "prod-install": [
             "php artisan clear-compiled",
             "php artisan cache:clear",
-            "chmod -R 777 storage",
             "php artisan migrate:fresh --force",
             "php artisan swapi:fetch:people 100",
             "php artisan passport:install"
